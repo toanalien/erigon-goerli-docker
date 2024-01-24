@@ -1,0 +1,26 @@
+version: "3.5"
+services:
+  erigon:
+    build:
+      context: .
+      args:
+        UPSTREAM_VERSION: devel
+    ports:
+      - "30805:30805/tcp"
+      - "30805:30805/udp"
+      - "42369:42369/tcp"
+      - "42369:42369/udp"
+      - "8545:8545"
+    volumes:
+      - "data:/home/erigon/.local/share"
+    environment:
+      P2P_PORT: 30805
+      BITTORRENT_PORT: 42369
+      ERIGON_EXTRA_OPTS: >-
+        --http.api=engine,eth,erigon,web3,net,debug,trace,txpool --prune htc
+        --prune.r.before=4367322
+    restart: unless-stopped
+    ulimits:
+      nofile:
+        soft: 1000000
+        hard: 1000000
